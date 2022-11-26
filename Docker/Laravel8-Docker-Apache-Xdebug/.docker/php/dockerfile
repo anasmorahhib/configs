@@ -2,6 +2,7 @@ FROM php:7.4-apache
 
 USER root
 
+
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \
 \
     &&  apt-get update \
@@ -20,7 +21,8 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \
     &&  docker-php-ext-install \
             pdo pdo_mysql opcache intl zip calendar dom mbstring gd xsl \
 \
-    &&  pecl install apcu && docker-php-ext-enable apcu
+    &&  pecl install apcu && docker-php-ext-enable apcu \
+    &&  pecl install xdebug && docker-php-ext-enable xdebug
 
 RUN apt-get install -y vim
 WORKDIR /var/www/html
