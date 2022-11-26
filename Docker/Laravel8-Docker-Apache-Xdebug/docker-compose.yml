@@ -1,4 +1,8 @@
 version: "3.8"
+networks:
+  test:
+    driver: bridge
+
 services:
   db:
     image: mysql:5.7
@@ -14,6 +18,8 @@ services:
       MYSQL_DATABASE: database_name
       MYSQL_USER: user
       MYSQL_PASSWORD: password
+    networks:
+      - test
 
   phpmyadmin:
     image: phpmyadmin
@@ -34,12 +40,15 @@ services:
       - "8081:80"
     restart: always
 
-
   app:
     container_name: apros_app
     build:
       context: .
       dockerfile: .docker/php/dockerfile
+    depends_on:
+      - db
+    networks:
+      - test
     ports:
       - 8000:80
     volumes:
