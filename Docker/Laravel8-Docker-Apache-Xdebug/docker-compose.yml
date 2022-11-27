@@ -1,9 +1,21 @@
 version: "3.8"
-networks:
-  test:
-    driver: bridge
 
 services:
+  app:
+    container_name: apros_app
+    build:
+      context: .
+      dockerfile: .docker/php/dockerfile
+    depends_on:
+      - db
+    ports:
+      - 8000:80
+    volumes:
+      - ./.docker/vhosts:/etc/apache2/sites-enabled
+      - ./:/var/www/html
+      - ./.docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./.docker/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+
   db:
     image: mysql:5.7
     container_name: mysql
@@ -18,8 +30,6 @@ services:
       MYSQL_DATABASE: database_name
       MYSQL_USER: user
       MYSQL_PASSWORD: password
-    networks:
-      - test
 
   phpmyadmin:
     image: phpmyadmin
@@ -40,22 +50,6 @@ services:
       - "8081:80"
     restart: always
 
-  app:
-    container_name: apros_app
-    build:
-      context: .
-      dockerfile: .docker/php/dockerfile
-    depends_on:
-      - db
-    networks:
-      - test
-    ports:
-      - 8000:80
-    volumes:
-      - ./.docker/vhosts:/etc/apache2/sites-enabled
-      - ./:/var/www/html
-      - ./.docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-      - ./.docker/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
 
 volumes:
   mysql_data:
