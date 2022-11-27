@@ -44,15 +44,14 @@ services:
     container_name: php
     depends_on:
       - mysql
-    networks:
-      - laravel
     ports:
       - 9000
     volumes:
       - ./:/var/www/html
       - ./.docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
       - ./.docker/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
-
+    networks:
+      - laravel
 
 volumes:
   mysql_data:
